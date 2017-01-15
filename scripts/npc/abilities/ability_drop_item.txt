@@ -11,7 +11,7 @@
     {
         "RunScript"
         {
-            "ScriptFile"    "item_abilities"
+            "ScriptFile"    "hero_abilities"
             "Function"      "DropItem"
         }
     }

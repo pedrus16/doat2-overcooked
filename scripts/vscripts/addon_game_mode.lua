@@ -59,6 +59,9 @@ function OvercookedGameMode:OnNPCSpawned( event )
 		local dropAbility = spawnedUnit:FindAbilityByName('drop_item')
 		spawnedUnit:UpgradeAbility(dropAbility)
 
+		local hammerAbility = spawnedUnit:FindAbilityByName('anvil_hammer')
+		spawnedUnit:UpgradeAbility(hammerAbility)
+
 		-- spawnedUnit:SwapAbilities('pickup_item', 'drop_item', true, false)
 	end
 end

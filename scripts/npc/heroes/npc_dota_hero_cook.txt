@@ -7,7 +7,7 @@
 	"Ability1"					"pickup_item"
 	"Ability2"					"interact"
 	"Ability3"					"drop_item"
-	"Ability4"					""
+	"Ability4"					"anvil_hammer"
 
 	"DisableWearables"			"1"
 }

@@ -3,9 +3,18 @@
     // General
     //-------------------------------------------------------------------------------------------------------------
     "BaseClass"             "ability_datadriven"
-    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
-    "AbilityTextureName"    "courier_return_stash_items"
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+    "AbilityUnitTargetTeam" "DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+    "AbilityUnitTargetType" "DOTA_UNIT_TARGET_ALL"
     "MaxLevel"              "1"
+
+    "AbilityDamage"             "0"
+    "AbilityManaCost"           "0"
+    "AbilityCooldown"           "0"
+    "AbilityCastRange"          "500"
+    "AbilityCastRangeBuffer"    "500"
+    "AbilityChannelTime"        "2.0"
+    "AbilityDuration"           "2.0"
  
     "OnSpellStart"
     {
