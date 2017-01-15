@@ -1,0 +1,16 @@
+"DOTAHeroes"
+{
+	"npc_dota_hero_cook"
+	{
+		"override_hero"				"npc_dota_hero_axe"			// Hero to override
+		"Model"						"models/creeps/lane_creeps/creep_radiant_melee/radiant_melee.vmdl"
+		"Level"						"1"
+		
+		"Ability1"					"pickup_item"
+		"Ability2"					"interact"
+		"Ability3"					"drop_item"
+		"Ability4"					""
+	
+		"DisableWearables"			"1"
+	}
+}

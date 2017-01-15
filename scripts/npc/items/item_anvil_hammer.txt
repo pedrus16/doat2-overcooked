@@ -1,0 +1,51 @@
+"item_anvil_hammer"
+	{
+		"AbilityBehavior"			"DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+		"BaseClass"					"item_datadriven"
+		"Model"						"models/props_gameplay/divine_rapier.vmdl"
+		"AbilityTextureName"		"rapier"
+ 
+ 
+		// Item Info
+		//---------------------------------------------------------------------------------------------------------
+		"ItemCost"					"6200"
+		"ItemDroppable"					"0"
+		"ItemSellable"					"0"
+		"ItemKillable"					"0"
+		"ItemQuality"					"epic"
+		"ItemShopTags"					"damage"
+		"ItemAliases"					"rapier"
+		"ItemShareability"				"ITEM_NOT_SHAREABLE"
+		"ItemDeclarations"				"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_TO_SPECTATORS | DECLARE_PURCHASES_IN_SPEECH"
+		"OnOwnerDied"
+		{
+			"RunScript"
+			{
+				"ScriptFile"			"scripts/vscripts/itemfunctions.lua"
+				"Function"			"DropItemOnDeath"
+			}
+		}
+ 
+		"Modifiers"
+		{
+			"modifier_rapier"
+			{
+				"Passive"			"1"
+				"IsHidden"			"1"
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_BASEATTACK_BONUSDAMAGE" 			"%bonus_damage"
+				}
+			}
+		}
+		// Special	
+		//---------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"bonus_damage"			"300"
+			}
+		}
+	}

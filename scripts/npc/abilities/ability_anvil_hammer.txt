@@ -1,0 +1,18 @@
+"anvil_hammer"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+    "AbilityTextureName"    "courier_return_stash_items"
+    "MaxLevel"              "1"
+ 
+    "OnSpellStart"
+    {
+        "RunScript"
+        {
+            "ScriptFile"    "anvil_abilities"
+            "Function"      "Hammer"
+        }
+    }
+}

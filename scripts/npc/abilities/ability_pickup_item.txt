@@ -1,0 +1,18 @@
+"pickup_item"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+    "AbilityTextureName"    "rubick_spell_steal"
+    "MaxLevel"              "1"
+ 
+    "OnSpellStart"
+    {
+        "RunScript"
+        {
+            "ScriptFile"    "item_abilities"
+            "Function"      "PickUpItem"
+        }
+    }
+}
