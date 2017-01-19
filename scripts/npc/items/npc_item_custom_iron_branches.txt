@@ -1,0 +1,14 @@
+"item_custom_iron_branches" 
+{
+    "BaseClass"             "item_datadriven"
+    "AbilityTextureName"    "item_iron_branches"
+    "Model"                 "models/props_gameplay/branch.vmdl"
+
+    "ItemCost"              "999999"
+    "ItemShopTags"          "common"
+    "ItemQuality"           "common"
+    "ItemStackable"         "0"
+    "ItemShareability"      "ITEM_FULLY_SHAREABLE"
+    "ItemPermanent"         "0"
+    "ItemSellable"          "0"
+} 

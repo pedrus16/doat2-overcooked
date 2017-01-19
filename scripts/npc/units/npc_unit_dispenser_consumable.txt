@@ -1,8 +1,8 @@
-"npc_unit_item_boots"
+"npc_unit_dispenser_consumable"
 {
 	// General
 	//----------------------------------------------------------------
-	"Model"						"models/props_gameplay/boots_of_speed.vmdl"	// Model.
+	"Model"						"models/props_debris/merchant_debris_chest001.vmdl"	// Model.
 	"BaseClass"					"npc_dota_creature"
 	"SoundSet"					"n_creep_Ranged"
 	"GameSoundsFile"			"soundevents/game_sounds_creeps.vsndevts"
@@ -11,7 +11,7 @@
 
 	// Abilities
 	//----------------------------------------------------------------
-	"Ability1"					"ability_item"			// Ability 1
+	"Ability1"					""			// Ability 1
 	"Ability2"					""			// Ability 2
 	"Ability3"					""			// Ability 3
 	"Ability4"					""			// Ability 4
@@ -33,7 +33,7 @@
 	// Bounds
 	//----------------------------------------------------------------
 	"RingRadius"				"0"
-	"HealthBarOffset"			"100"
+	"HealthBarOffset"			"0"
 
 	// Bounty
 	//----------------------------------------------------------------
@@ -48,7 +48,7 @@
 
 	// Status
 	//----------------------------------------------------------------
-	"StatusHealth"				"100"		// Base health.
+	"StatusHealth"				"1"		// Base health.
 	"StatusHealthRegen"			"0"		// Health regeneration rate.
 	"StatusMana"				"0"			// Base mana.
 	"StatusManaRegen"			"0"		// Mana regeneration rate.		 

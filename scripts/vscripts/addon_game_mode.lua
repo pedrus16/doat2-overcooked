@@ -12,7 +12,6 @@ function Precache( context )
 			PrecacheResource( "particle", "*.vpcf", context )
 			PrecacheResource( "particle_folder", "particles/folder", context )
 	]]
-	PrecacheItemByNameSync( "item_pickable", context )
 end
 
 -- Create the game mode when we activate
@@ -30,6 +29,8 @@ function OvercookedGameMode:InitGameMode()
 	GameRules:SetPreGameTime(0)
 
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( OvercookedGameMode, "OnNPCSpawned" ), self )
+	ListenToGameEvent( "dota_player_pick_hero", Dynamic_Wrap( OvercookedGameMode, "OnPlayerPickHero" ), self )
+	
 end
 
 -- Evaluate the state of the game
@@ -50,18 +51,35 @@ function OvercookedGameMode:OnNPCSpawned( event )
 	end
 
 	if spawnedUnit:IsRealHero() then
-		local pickupAbility = spawnedUnit:FindAbilityByName('pickup_item')
-		spawnedUnit:UpgradeAbility(pickupAbility)
-
-		local interactAbility = spawnedUnit:FindAbilityByName('interact')
-		spawnedUnit:UpgradeAbility(interactAbility)
-
-		local dropAbility = spawnedUnit:FindAbilityByName('drop_item')
-		spawnedUnit:UpgradeAbility(dropAbility)
-
-		local hammerAbility = spawnedUnit:FindAbilityByName('anvil_hammer')
-		spawnedUnit:UpgradeAbility(hammerAbility)
-
-		-- spawnedUnit:SwapAbilities('pickup_item', 'drop_item', true, false)
+		spawnedUnit:AddItemByName("item_branches")
+		spawnedUnit:AddItemByName("item_branches")
+		spawnedUnit:AddItemByName("item_tango")
+	else
+		print(spawnedUnit:GetUnitName())
+		spawnedUnit:SetControllableByPlayer(0, false)
 	end
+end
+
+function OvercookedGameMode:OnPlayerPickHero( event )
+	local hero = EntIndexToHScript(event.heroindex)
+	local playerID = hero:GetPlayerID()
+
+	-- local couriers = Entities:FindAllByName("npc_unit_courier")	
+
+	-- local unit = Entities:FindByName(nil, 'npc_dota_creature')
+	-- print("-----------------------------------------")
+	-- while unit do
+	-- 	print(unit:GetUnitName())
+	-- 	print(playerID)
+	-- 	unit:SetOwner(hero)
+	-- 	unit:SetControllableByPlayer(playerID, true)
+	-- 	print(unit:IsControllableByAnyPlayer())
+	-- 	unit:SetHasInventory(true)
+	-- 	unit = Entities:FindByName(unit, 'npc_dota_creature')
+	-- end
+
+	-- for _, courier in pairs(couriers) do
+	-- 	print('UNIT')
+	-- 	print(courier:GetUnitName())
+	-- end
 end

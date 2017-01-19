@@ -1,0 +1,8 @@
+test2
+{
+	material materials/overviews/test2.vmat
+	pos_x 0
+	pos_y -2147483648
+	scale -332306979139188339659867366684098560.000
+}
+

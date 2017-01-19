@@ -1,19 +1,24 @@
 "DOTAUnits"
 {
-	"npc_unit_anvil"
+	"npc_unit_counter"
 	{
 		// General
 		//----------------------------------------------------------------
-		"Model"						"models/props_gameplay/anvil/anvil_00.vmdl"	// Model.
+		"Model"						"models/props_stone/stoneblock005a.vmdl"	// Model.
 		"BaseClass"					"npc_dota_creature"
 		"SoundSet"					"n_creep_Ranged"
 		"GameSoundsFile"			"soundevents/game_sounds_creeps.vsndevts"
 		"Level"						"1"
 		"ModelScale" 				"1"
+		"ConsideredHero"			"1"
+	
+		// Inventory
+		//----------------------------------------------------------------
+		"HasInventory"				"1"
 	
 		// Abilities
 		//----------------------------------------------------------------
-		"Ability1"					"ability_anvil"			// Ability 1
+		"Ability1"					""			// Ability 1
 		"Ability2"					""			// Ability 2
 		"Ability3"					""			// Ability 3
 		"Ability4"					""			// Ability 4
@@ -35,7 +40,7 @@
 		// Bounds
 		//----------------------------------------------------------------
 		"RingRadius"				"0"
-		"HealthBarOffset"			"100"
+		"HealthBarOffset"			"0"
 	
 		// Bounty
 		//----------------------------------------------------------------
@@ -50,7 +55,7 @@
 	
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"100"		// Base health.
+		"StatusHealth"				"1"		// Base health.
 		"StatusHealthRegen"			"0"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"		// Mana regeneration rate.		 
@@ -73,20 +78,25 @@
 		{
 		}
 	}
-	"npc_unit_item_base"
+	"npc_unit_courier"
 	{
 		// General
 		//----------------------------------------------------------------
-		"Model"						"models/props_gameplay/red_box.vmdl"	// Model.
+		"Model"						"models/props_gameplay/donkey.vmdl"	// Model.
 		"BaseClass"					"npc_dota_creature"
 		"SoundSet"					"n_creep_Ranged"
 		"GameSoundsFile"			"soundevents/game_sounds_creeps.vsndevts"
 		"Level"						"1"
 		"ModelScale" 				"1"
+		"ConsideredHero"			"1"
+	
+		// Inventory
+		//----------------------------------------------------------------
+		"HasInventory"				"1"
 	
 		// Abilities
 		//----------------------------------------------------------------
-		"Ability1"					"ability_item"			// Ability 1
+		"Ability1"					""			// Ability 1
 		"Ability2"					""			// Ability 2
 		"Ability3"					""			// Ability 3
 		"Ability4"					""			// Ability 4
@@ -108,7 +118,7 @@
 		// Bounds
 		//----------------------------------------------------------------
 		"RingRadius"				"0"
-		"HealthBarOffset"			"100"
+		"HealthBarOffset"			"0"
 	
 		// Bounty
 		//----------------------------------------------------------------
@@ -118,12 +128,12 @@
 	
 		// Movement
 		//----------------------------------------------------------------
-		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_NONE"
-		"MovementSpeed"				"0"		// Speed.			
+		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
+		"MovementSpeed"				"200"		// Speed.			
 	
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"100"		// Base health.
+		"StatusHealth"				"1"		// Base health.
 		"StatusHealthRegen"			"0"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"		// Mana regeneration rate.		 
@@ -146,11 +156,11 @@
 		{
 		}
 	}
-	"npc_unit_item_boots"
+	"npc_unit_dispenser_attribute"
 	{
 		// General
 		//----------------------------------------------------------------
-		"Model"						"models/props_gameplay/boots_of_speed.vmdl"	// Model.
+		"Model"						"models/props_debris/merchant_debris_chest001.vmdl"	// Model.
 		"BaseClass"					"npc_dota_creature"
 		"SoundSet"					"n_creep_Ranged"
 		"GameSoundsFile"			"soundevents/game_sounds_creeps.vsndevts"
@@ -159,7 +169,7 @@
 	
 		// Abilities
 		//----------------------------------------------------------------
-		"Ability1"					"ability_item"			// Ability 1
+		"Ability1"					""			// Ability 1
 		"Ability2"					""			// Ability 2
 		"Ability3"					""			// Ability 3
 		"Ability4"					""			// Ability 4
@@ -181,7 +191,7 @@
 		// Bounds
 		//----------------------------------------------------------------
 		"RingRadius"				"0"
-		"HealthBarOffset"			"100"
+		"HealthBarOffset"			"0"
 	
 		// Bounty
 		//----------------------------------------------------------------
@@ -196,7 +206,7 @@
 	
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"100"		// Base health.
+		"StatusHealth"				"1"		// Base health.
 		"StatusHealthRegen"			"0"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"		// Mana regeneration rate.		 
@@ -219,11 +229,11 @@
 		{
 		}
 	}
-	"npc_unit_item_energy_booster"
+	"npc_unit_dispenser_consumable"
 	{
 		// General
 		//----------------------------------------------------------------
-		"Model"						"models/props_gameplay/salve_blue.vmdl"	// Model.
+		"Model"						"models/props_debris/merchant_debris_chest001.vmdl"	// Model.
 		"BaseClass"					"npc_dota_creature"
 		"SoundSet"					"n_creep_Ranged"
 		"GameSoundsFile"			"soundevents/game_sounds_creeps.vsndevts"
@@ -232,7 +242,7 @@
 	
 		// Abilities
 		//----------------------------------------------------------------
-		"Ability1"					"ability_item"			// Ability 1
+		"Ability1"					""			// Ability 1
 		"Ability2"					""			// Ability 2
 		"Ability3"					""			// Ability 3
 		"Ability4"					""			// Ability 4
@@ -254,7 +264,7 @@
 		// Bounds
 		//----------------------------------------------------------------
 		"RingRadius"				"0"
-		"HealthBarOffset"			"100"
+		"HealthBarOffset"			"0"
 	
 		// Bounty
 		//----------------------------------------------------------------
@@ -269,7 +279,7 @@
 	
 		// Status
 		//----------------------------------------------------------------
-		"StatusHealth"				"100"		// Base health.
+		"StatusHealth"				"1"		// Base health.
 		"StatusHealthRegen"			"0"		// Health regeneration rate.
 		"StatusMana"				"0"			// Base mana.
 		"StatusManaRegen"			"0"		// Mana regeneration rate.		 
