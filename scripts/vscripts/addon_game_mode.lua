@@ -16,8 +16,8 @@ end
 
 -- Create the game mode when we activate
 function Activate()
-	GameRules.gamemode = OvercookedGameMode()
-	GameRules.gamemode:InitGameMode()
+	-- OvercookedGameMode()
+	OvercookedGameMode:InitGameMode()
 end
 
 function OvercookedGameMode:InitGameMode()
@@ -26,10 +26,13 @@ function OvercookedGameMode:InitGameMode()
 	GameRules:GetGameModeEntity():SetCustomGameForceHero('npc_dota_hero_axe')
 	GameRules:LockCustomGameSetupTeamAssignment(true)
 	GameRules:SetCustomGameSetupAutoLaunchDelay(0)
-	GameRules:SetPreGameTime(0)
+	GameRules:SetPreGameTime(30)
+	GameRules:GetGameModeEntity().OvercookedGameMode = self
 
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( OvercookedGameMode, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_pick_hero", Dynamic_Wrap( OvercookedGameMode, "OnPlayerPickHero" ), self )
+
+	self:SpawnCourier()
 	
 end
 
@@ -64,22 +67,23 @@ function OvercookedGameMode:OnPlayerPickHero( event )
 	local hero = EntIndexToHScript(event.heroindex)
 	local playerID = hero:GetPlayerID()
 
-	-- local couriers = Entities:FindAllByName("npc_unit_courier")	
+	local unit = Entities:FindByName(nil, "npc_dota_creature")
+	while unit do
+		print(unit:GetUnitName())
+		unit:SetOwner(hero)
+		unit:SetControllableByPlayer(playerID, true)
+		unit = Entities:FindByName(unit, "npc_dota_creature")
+	end
+end
 
-	-- local unit = Entities:FindByName(nil, 'npc_dota_creature')
-	-- print("-----------------------------------------")
-	-- while unit do
-	-- 	print(unit:GetUnitName())
-	-- 	print(playerID)
-	-- 	unit:SetOwner(hero)
-	-- 	unit:SetControllableByPlayer(playerID, true)
-	-- 	print(unit:IsControllableByAnyPlayer())
-	-- 	unit:SetHasInventory(true)
-	-- 	unit = Entities:FindByName(unit, 'npc_dota_creature')
-	-- end
+function OvercookedGameMode:SpawnCourier()
 
-	-- for _, courier in pairs(couriers) do
-	-- 	print('UNIT')
-	-- 	print(courier:GetUnitName())
-	-- end
+	local spawner = Entities:FindByClassname(nil, "info_courier_spawn")
+
+	if spawner == nil then return end
+
+	local playerID = 0
+	local player = PlayerResource:GetPlayer(playerID)
+	local courier = CreateUnitByName('npc_unit_courier', spawner:GetAbsOrigin(), true, nil, nil, DOTA_TEAM_GOODGUYS)
+
 end
