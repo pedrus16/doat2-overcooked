@@ -1,3 +1,26 @@
 "DOTAAbilities"
 {
+	"courier"
+	{
+		// General
+	    //-------------------------------------------------------------------------------------------------------------
+	    "BaseClass"              "ability_datadriven"
+	    "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+	
+	    "Modifiers"
+	    {
+	        "controllable_by_everyone"
+	        {
+	        	"Passive"		"1"
+	        	"OnCreated"
+	        	{
+	        		"RunScript"
+	        		{
+	        			"ScriptFile"	"abilities/ability_courier.lua"
+	        			"Function"		"SetControllableByEveryone"
+	        		}
+	        	}
+	        }
+	    }
+	}
 }

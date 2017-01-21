@@ -1,4 +1,4 @@
--- Generated from template
+local ORDER_RATE = 10
 
 if OvercookedGameMode == nil then
 	OvercookedGameMode = class({})
@@ -22,24 +22,30 @@ end
 
 function OvercookedGameMode:InitGameMode()
 	print( "Overcooked addon is loaded." )
-	GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
+	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 1)
 	GameRules:GetGameModeEntity():SetCustomGameForceHero('npc_dota_hero_axe')
 	GameRules:LockCustomGameSetupTeamAssignment(true)
 	GameRules:SetCustomGameSetupAutoLaunchDelay(0)
 	GameRules:SetPreGameTime(30)
 	GameRules:GetGameModeEntity().OvercookedGameMode = self
 
+	self.currentOrders = {}
+
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( OvercookedGameMode, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_pick_hero", Dynamic_Wrap( OvercookedGameMode, "OnPlayerPickHero" ), self )
 
-	self:SpawnCourier()
-	
 end
 
 -- Evaluate the state of the game
 function OvercookedGameMode:OnThink()
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-		--print( "Template addon script is running." )
+		
+	self:PurgeOverdueOrders()
+	if self:ShouldGenerateOrder() then
+		self:GenerateOrder()
+	end
+	self:SpawnCourier()
+
 	elseif GameRules:State_Get() >= DOTA_GAMERULES_STATE_POST_GAME then
 		return nil
 	end
@@ -57,9 +63,6 @@ function OvercookedGameMode:OnNPCSpawned( event )
 		spawnedUnit:AddItemByName("item_branches")
 		spawnedUnit:AddItemByName("item_branches")
 		spawnedUnit:AddItemByName("item_tango")
-	else
-		print(spawnedUnit:GetUnitName())
-		spawnedUnit:SetControllableByPlayer(0, false)
 	end
 end
 
@@ -69,11 +72,121 @@ function OvercookedGameMode:OnPlayerPickHero( event )
 
 	local unit = Entities:FindByName(nil, "npc_dota_creature")
 	while unit do
-		print(unit:GetUnitName())
 		unit:SetOwner(hero)
 		unit:SetControllableByPlayer(playerID, true)
 		unit = Entities:FindByName(unit, "npc_dota_creature")
 	end
+end
+
+local orders = {
+	{
+		items = { 'item_tango' },
+		duration = 60
+	},
+	{
+		items = { 'item_branches' },
+		duration = 60
+	},
+	{
+		items = { 'item_branches', 'item_branches', 'item_branches' },
+		duration = 60
+	},
+	{
+		items = { 'item_tango', 'item_branches', 'item_branches', 'item_branches' },
+		duration = 60
+	},
+}
+
+function OvercookedGameMode:ShouldGenerateOrder()
+	
+	if #self.currentOrders >= 5 then return false end
+
+	if self.startTime == nil then
+		self.startTime = Time()
+	end
+	local delta = self.startTime - Time()
+	if math.floor(delta % ORDER_RATE) == 0 then
+		return true
+	end
+	return false
+end
+
+function OvercookedGameMode:GenerateOrder()
+
+	print('Generate Order')
+
+	table.insert(self.currentOrders, {
+		content = orders[2],
+		start_time = Time()
+	})
+
+	DeepPrintTable(self.currentOrders)
+end
+
+function OvercookedGameMode:PurgeOverdueOrders()
+
+	local validOrders = {}
+
+	for _, order in pairs(self.currentOrders) do
+		if Time() < (order.start_time + order.content.duration) then
+			table.insert(validOrders, order)
+		end
+	end
+
+	self.currentOrders = validOrders
+
+end
+
+function OvercookedGameMode:CheckOrder( courier )
+
+	local fail = true
+
+	for key, order in pairs(self.currentOrders) do
+		local orderItems = order.content.items
+		local courierInventory = {}
+
+		for i=1,6 do
+			local item = courier:GetItemInSlot(i-1)
+			if item then
+				table.insert(courierInventory, item:GetName())
+			end
+		end
+		if AreTablesEqual(order.content.items, courierInventory) then
+			GameRules:SendCustomMessage('Order completed!', 0, 1)
+			fail = false
+			table.remove(self.currentOrders, key)
+			break
+		end
+	end
+
+	if fail then
+		GameRules:SendCustomMessage('Order fail!', 0, 1)
+	end
+
+	courier:Destroy()
+
+end
+
+function AreTablesEqual(t1, t2)
+
+	if #t1 ~= #t2 then return false end
+
+	DeepPrintTable(t2)
+
+	for _, val1 in pairs(t1) do
+		local indexOf = -1
+		for key, val2 in pairs(t2) do
+			if val1 == val2 then
+				indexOf = key
+				break
+			end
+		end
+		if indexOf == -1 then return false end
+		table.remove(t2, indexOf)
+	end
+
+	return true
+
 end
 
 function OvercookedGameMode:SpawnCourier()
@@ -81,6 +194,19 @@ function OvercookedGameMode:SpawnCourier()
 	local spawner = Entities:FindByClassname(nil, "info_courier_spawn")
 
 	if spawner == nil then return end
+
+	local units = FindUnitsInRadius(spawner:GetTeam(), 
+									spawner:GetAbsOrigin(), 
+									nil, 
+									32, 
+									DOTA_UNIT_TARGET_TEAM_FRIENDLY, 
+									DOTA_UNIT_TARGET_ALL, 
+									DOTA_UNIT_TARGET_FLAG_NONE, 
+									FIND_ANY_ORDER,
+									false)
+	for _, unit in pairs(units) do
+		if unit:GetUnitName() == 'npc_unit_courier' then return end
+	end	
 
 	local playerID = 0
 	local player = PlayerResource:GetPlayer(playerID)
