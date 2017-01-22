@@ -31,6 +31,8 @@ function OvercookedGameMode:InitGameMode()
 
 	self.currentOrders = {}
 
+	CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders )
+
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( OvercookedGameMode, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_pick_hero", Dynamic_Wrap( OvercookedGameMode, "OnPlayerPickHero" ), self )
 
@@ -115,25 +117,33 @@ function OvercookedGameMode:GenerateOrder()
 
 	print('Generate Order')
 
-	table.insert(self.currentOrders, {
-		content = orders[2],
+	local newOrder = {
+		content = orders[RandomInt(1, #orders)],
 		start_time = Time()
-	})
+	}
+	table.insert(self.currentOrders, newOrder)
+
+	CustomGameEventManager:Send_ServerToAllClients( "overcooked_order_created", newOrder )
 
 	DeepPrintTable(self.currentOrders)
+	CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders )
 end
 
 function OvercookedGameMode:PurgeOverdueOrders()
 
 	local validOrders = {}
 
-	for _, order in pairs(self.currentOrders) do
+	for key, order in pairs(self.currentOrders) do
 		if Time() < (order.start_time + order.content.duration) then
 			table.insert(validOrders, order)
+		else
+			CustomGameEventManager:Send_ServerToAllClients( "overcooked_order_removed", { key = key } )
 		end
 	end
 
 	self.currentOrders = validOrders
+
+	CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders );
 
 end
 
@@ -155,6 +165,8 @@ function OvercookedGameMode:CheckOrder( courier )
 			GameRules:SendCustomMessage('Order completed!', 0, 1)
 			fail = false
 			table.remove(self.currentOrders, key)
+			CustomGameEventManager:Send_ServerToAllClients( "overcooked_order_removed", { key = key } )
+			CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders );
 			break
 		end
 	end
