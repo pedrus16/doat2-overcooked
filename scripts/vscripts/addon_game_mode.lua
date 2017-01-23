@@ -1,5 +1,24 @@
 local ORDER_RATE = 10
 
+local orders = {
+	{
+		items = { 'item_tango' },
+		duration = 30
+	},
+	{
+		items = { 'item_branches' },
+		duration = 30
+	},
+	{
+		items = { 'item_branches', 'item_branches', 'item_branches' },
+		duration = 30
+	},
+	{
+		items = { 'item_tango', 'item_branches', 'item_branches', 'item_branches' },
+		duration = 30
+	},
+}
+
 if OvercookedGameMode == nil then
 	OvercookedGameMode = class({})
 end
@@ -80,33 +99,14 @@ function OvercookedGameMode:OnPlayerPickHero( event )
 	end
 end
 
-local orders = {
-	{
-		items = { 'item_tango' },
-		duration = 60
-	},
-	{
-		items = { 'item_branches' },
-		duration = 60
-	},
-	{
-		items = { 'item_branches', 'item_branches', 'item_branches' },
-		duration = 60
-	},
-	{
-		items = { 'item_tango', 'item_branches', 'item_branches', 'item_branches' },
-		duration = 60
-	},
-}
-
 function OvercookedGameMode:ShouldGenerateOrder()
 	
 	if #self.currentOrders >= 5 then return false end
 
 	if self.startTime == nil then
-		self.startTime = Time()
+		self.startTime = GameRules:GetGameTime()
 	end
-	local delta = self.startTime - Time()
+	local delta = self.startTime - GameRules:GetGameTime()
 	if math.floor(delta % ORDER_RATE) == 0 then
 		return true
 	end
@@ -119,13 +119,9 @@ function OvercookedGameMode:GenerateOrder()
 
 	local newOrder = {
 		content = orders[RandomInt(1, #orders)],
-		start_time = Time()
+		start_time = GameRules:GetGameTime()
 	}
 	table.insert(self.currentOrders, newOrder)
-
-	CustomGameEventManager:Send_ServerToAllClients( "overcooked_order_created", newOrder )
-
-	DeepPrintTable(self.currentOrders)
 	CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders )
 end
 
@@ -134,10 +130,8 @@ function OvercookedGameMode:PurgeOverdueOrders()
 	local validOrders = {}
 
 	for key, order in pairs(self.currentOrders) do
-		if Time() < (order.start_time + order.content.duration) then
+		if GameRules:GetGameTime() < (order.start_time + order.content.duration) then
 			table.insert(validOrders, order)
-		else
-			CustomGameEventManager:Send_ServerToAllClients( "overcooked_order_removed", { key = key } )
 		end
 	end
 
@@ -165,7 +159,6 @@ function OvercookedGameMode:CheckOrder( courier )
 			GameRules:SendCustomMessage('Order completed!', 0, 1)
 			fail = false
 			table.remove(self.currentOrders, key)
-			CustomGameEventManager:Send_ServerToAllClients( "overcooked_order_removed", { key = key } )
 			CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders );
 			break
 		end
