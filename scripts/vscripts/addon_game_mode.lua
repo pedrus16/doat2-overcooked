@@ -43,6 +43,10 @@ function OvercookedGameMode:InitGameMode()
 	print( "Overcooked addon is loaded." )
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 1)
 	GameRules:GetGameModeEntity():SetCustomGameForceHero('npc_dota_hero_axe')
+	GameRules:GetGameModeEntity():SetExecuteOrderFilter(Dynamic_Wrap( OvercookedGameMode, "OrderFilter" ), self)
+	-- GameRules:GetGameModeEntity():SetTopBarTeamValuesVisible(true)
+	-- GameRules:GetGameModeEntity():SetTopBarTeamValuesOverride(true)
+	-- GameRules:GetGameModeEntity():SetTopBarTeamValue(0, 43)
 	GameRules:LockCustomGameSetupTeamAssignment(true)
 	GameRules:SetCustomGameSetupAutoLaunchDelay(0)
 	GameRules:SetPreGameTime(30)
@@ -73,6 +77,19 @@ function OvercookedGameMode:OnThink()
 	return 1
 end
 
+function OvercookedGameMode:OrderFilter( table )
+
+	local targetID = table.entindex_target
+
+	if targetID == 0 then return true end
+
+	local target = EntIndexToHScript(targetID)
+
+	Msg(target:GetUnitName())
+
+	return true
+
+end
 
 function OvercookedGameMode:OnNPCSpawned( event )
 	local spawnedUnit = EntIndexToHScript( event.entindex )
@@ -157,6 +174,7 @@ function OvercookedGameMode:CheckOrder( courier )
 		end
 		if AreTablesEqual(order.content.items, courierInventory) then
 			GameRules:SendCustomMessage('Order completed!', 0, 1)
+			GameRules:GetGameModeEntity():SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, 42)
 			fail = false
 			table.remove(self.currentOrders, key)
 			CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders );
