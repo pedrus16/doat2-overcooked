@@ -3,19 +3,19 @@ local ORDER_RATE = 10
 local orders = {
 	{
 		items = { 'item_tango' },
-		duration = 30
+		duration = 45
 	},
 	{
 		items = { 'item_branches' },
-		duration = 30
+		duration = 45
 	},
 	{
 		items = { 'item_branches', 'item_branches', 'item_branches' },
-		duration = 30
+		duration = 45
 	},
 	{
 		items = { 'item_tango', 'item_branches', 'item_branches', 'item_branches' },
-		duration = 30
+		duration = 45
 	},
 }
 
@@ -44,9 +44,11 @@ function OvercookedGameMode:InitGameMode()
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, 1)
 	GameRules:GetGameModeEntity():SetCustomGameForceHero('npc_dota_hero_axe')
 	GameRules:GetGameModeEntity():SetExecuteOrderFilter(Dynamic_Wrap( OvercookedGameMode, "OrderFilter" ), self)
+
 	-- GameRules:GetGameModeEntity():SetTopBarTeamValuesVisible(true)
 	-- GameRules:GetGameModeEntity():SetTopBarTeamValuesOverride(true)
 	-- GameRules:GetGameModeEntity():SetTopBarTeamValue(0, 43)
+
 	GameRules:LockCustomGameSetupTeamAssignment(true)
 	GameRules:SetCustomGameSetupAutoLaunchDelay(0)
 	GameRules:SetPreGameTime(30)
@@ -55,6 +57,8 @@ function OvercookedGameMode:InitGameMode()
 	self.currentOrders = {}
 
 	CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders )
+
+	CustomGameEventManager:RegisterListener( "request_item", Dynamic_Wrap(OvercookedGameMode, "OnItemRequest"))
 
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( OvercookedGameMode, "OnNPCSpawned" ), self )
 	ListenToGameEvent( "dota_player_pick_hero", Dynamic_Wrap( OvercookedGameMode, "OnPlayerPickHero" ), self )
@@ -79,14 +83,27 @@ end
 
 function OvercookedGameMode:OrderFilter( table )
 
-	local targetID = table.entindex_target
+	local playerID = table.issuer_player_id_const
+	CustomUI:DynamicHud_Destroy(playerID, "DispenserMenu")
 
+	if table.order_type ~= DOTA_UNIT_ORDER_MOVE_TO_TARGET then return true end
+
+	local targetID = table.entindex_target
 	if targetID == 0 then return true end
 
 	local target = EntIndexToHScript(targetID)
+	
+	if target:GetUnitName() ~= "npc_unit_dispenser_attribute" then return true end
+	
+	local player = PlayerResource:GetPlayer(playerID)
+	local hero = player:GetAssignedHero()
 
-	Msg(target:GetUnitName())
+	if table.units['0'] ~= hero:GetEntityIndex() then return true end
 
+	CustomUI:DynamicHud_Create(playerID, "DispenserMenu", "file://{resources}/layout/custom_game/overcooked_chest_context_menu.xml", {
+		items = { "item_branches", "item_tango" } -- TODO Fetch items from the entity
+	})
+	
 	return true
 
 end
@@ -132,8 +149,6 @@ end
 
 function OvercookedGameMode:GenerateOrder()
 
-	print('Generate Order')
-
 	local newOrder = {
 		content = orders[RandomInt(1, #orders)],
 		start_time = GameRules:GetGameTime()
@@ -174,7 +189,7 @@ function OvercookedGameMode:CheckOrder( courier )
 		end
 		if AreTablesEqual(order.content.items, courierInventory) then
 			GameRules:SendCustomMessage('Order completed!', 0, 1)
-			GameRules:GetGameModeEntity():SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, 42)
+			-- GameRules:GetGameModeEntity():SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, 1)
 			fail = false
 			table.remove(self.currentOrders, key)
 			CustomNetTables:SetTableValue( "overcooked", "orders", self.currentOrders );
@@ -193,8 +208,6 @@ end
 function AreTablesEqual(t1, t2)
 
 	if #t1 ~= #t2 then return false end
-
-	DeepPrintTable(t2)
 
 	for _, val1 in pairs(t1) do
 		local indexOf = -1
@@ -235,4 +248,14 @@ function OvercookedGameMode:SpawnCourier()
 	local player = PlayerResource:GetPlayer(playerID)
 	local courier = CreateUnitByName('npc_unit_courier', spawner:GetAbsOrigin(), true, nil, nil, DOTA_TEAM_GOODGUYS)
 
+end
+
+function OvercookedGameMode:OnItemRequest( event )
+	local playerID = event.PlayerID
+	local item = event.name
+
+	local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+
+	hero:AddItemByName(item)
+	CustomUI:DynamicHud_Destroy(playerID, "DispenserMenu")
 end
