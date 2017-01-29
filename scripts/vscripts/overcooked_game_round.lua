@@ -63,6 +63,7 @@ end
 function COvercookedGameRound:End()
 
 	print("Round " .. self._nRoundNumber .. " End")
+	self._gameMode:NotifyClientOfRoundEnd()
 
 end
 

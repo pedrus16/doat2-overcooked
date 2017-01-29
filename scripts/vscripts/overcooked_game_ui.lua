@@ -17,3 +17,9 @@ function COvercookedGameMode:NotifyClientOfCompleteOrder( order )
 	CustomGameEventManager:Send_ServerToTeam( DOTA_TEAM_GOODGUYS, "order_complete", netTable )
 
 end
+
+function COvercookedGameMode:NotifyClientOfRoundEnd()
+
+	CustomGameEventManager:Send_ServerToAllClients("round_over", {} )
+
+end

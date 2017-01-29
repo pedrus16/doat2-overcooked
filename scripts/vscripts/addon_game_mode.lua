@@ -107,6 +107,7 @@ function COvercookedGameMode:RoundFinished()
 
 	self.roundNumber = self.roundNumber + 1
 	if self.roundNumber > #self.rounds then
+		self.currentRound = nil	
 		return
 	end
 	self.currentRound = self.rounds[self.roundNumber]
