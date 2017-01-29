@@ -1,0 +1,53 @@
+"dota_overcooked"
+{
+	"Round1"
+	{
+		"Duration"			"120"
+		"OrderInterval"		"5"
+
+		"Order1"
+		{
+			"Duration"		"30"
+			"Items"
+			{
+				"1"		"item_tango"
+			}
+		}
+		"Order2"
+		{
+			"Duration"		"30"
+			"Items"
+			{
+				"1"		"item_tango"
+				"2"		"item_branches"
+				"3"		"item_branches"
+				"4"		"item_branches"
+			}
+		}
+		"Order3"
+		{
+			"Duration"		"30"
+			"Items"
+			{
+				"1"		"item_tango"
+				"2"		"item_clarity"
+				"3"		"item_observer"
+			}
+		}
+	}
+
+	"Round2"
+	{
+		"Duration"			"120"
+		"OrderInterval"		"5"
+		"Order1"
+		{
+			"Duration"		"30"
+			"Items"
+			{
+				"1"		"item_tango"
+				"2"		"item_tango"
+			}
+		}
+	}
+}

@@ -4,5 +4,14 @@ function CourierExit( trigger )
 
 	if courier == nil then return end
 
-	GameRules:GetGameModeEntity().OvercookedGameMode:CheckOrder(courier)
+	local courierInventory = {}
+	for i=1,6 do
+		local item = courier:GetItemInSlot(i-1)
+		if item then
+			table.insert(courierInventory, item:GetName())
+		end
+	end
+
+	GameRules.overcooked.currentRound:CheckForMatchingOrder(courierInventory)
+	courier:Destroy()
 end
